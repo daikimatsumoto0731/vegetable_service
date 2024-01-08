@@ -24,6 +24,27 @@ ja:
         prefecture: "都道府県"
         password: "パスワード"
         password_confirmation: "パスワード確認"
+    errors:
+      models:
+        user:
+          attributes:
+            username:
+              blank: "ユーザー名を入力してください"
+            prefecture:
+              blank: "都道府県を入力してください"
+            first_name:
+              blank: "名を入力してください"
+            last_name:
+              blank: "姓を入力してください"
+            email:
+              blank: "メールアドレスを入力してください"
+              taken: "このメールアドレスは既に使用されています"
+            password:
+              blank: "パスワードを入力してください"
+              too_short: "パスワードは%{count}文字以上で入力してください"
+            password_confirmation:
+              blank: "パスワード確認を入力してください"
+              confirmation: "パスワードが一致しません"
   helpers:
     submit:
       create: "登録する"
