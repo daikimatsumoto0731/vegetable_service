@@ -305,7 +305,8 @@ Devise.setup do |config|
   config.responder.error_status = :unprocessable_entity
   config.responder.redirect_status = :see_other
   config.sign_in_after_reset_password = false
-  config.omniauth :line, ENV['LINE_CHANNEL_ID'], ENV['LINE_CHANNEL_SECRET'], scope: 'profile openid email', bot_prompt: 'aggressive'
+  config.omniauth :line, ENV.fetch('LINE_CHANNEL_ID', nil), ENV.fetch('LINE_CHANNEL_SECRET', nil), scope: 'profile openid email',
+                                                                                                   bot_prompt: 'aggressive'
   # ==> Configuration for :registerable
 
   # When set to false, does not sign a user in automatically after their password is

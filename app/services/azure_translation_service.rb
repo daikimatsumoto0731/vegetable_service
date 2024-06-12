@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 require 'net/http'
 require 'uri'
 require 'json'
 
 class AzureTranslationService
-  AZURE_TRANSLATOR_KEY = ENV['AZURE_TRANSLATOR_KEY']
-  AZURE_TRANSLATOR_REGION = ENV['AZURE_TRANSLATOR_REGION']
-  AZURE_TRANSLATOR_ENDPOINT = "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0"
+  AZURE_TRANSLATOR_KEY = ENV.fetch('AZURE_TRANSLATOR_KEY', nil)
+  AZURE_TRANSLATOR_REGION = ENV.fetch('AZURE_TRANSLATOR_REGION', nil)
+  AZURE_TRANSLATOR_ENDPOINT = 'https://api.cognitive.microsofttranslator.com/translate?api-version=3.0'
 
   def self.translate(text, target_lang = 'en')
     uri = URI(AZURE_TRANSLATOR_ENDPOINT)
@@ -23,11 +25,9 @@ class AzureTranslationService
     end
 
     result = JSON.parse(response.body)
-    if response.is_a?(Net::HTTPSuccess)
-      result[0]['translations'][0]['text']
-    else
-      raise "Translation API error: #{result['error']['message']}"
-    end
+    raise "Translation API error: #{result['error']['message']}" unless response.is_a?(Net::HTTPSuccess)
+
+    result[0]['translations'][0]['text']
   rescue StandardError => e
     Rails.logger.error "Failed to translate text: #{e.message}"
     text # 翻訳に失敗した場合は元の名前を使用

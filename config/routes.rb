@@ -29,7 +29,7 @@ Rails.application.routes.draw do
       post 'create_and_redirect', to: 'vegetables#create_and_redirect'
     end
   end
-  
+
   # Eventsに関するルーティング
   resources :events, only: %i[index show create destroy] do
     member do

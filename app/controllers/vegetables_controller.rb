@@ -19,7 +19,8 @@ class VegetablesController < ApplicationController
   def create_and_redirect
     @vegetable = current_user.vegetables.build(vegetable_params)
     if @vegetable.save
-      redirect_to event_path(id: @vegetable.id, selected_vegetable: @vegetable.name.downcase, sowing_date: @vegetable.sowing_date)
+      redirect_to event_path(id: @vegetable.id, selected_vegetable: @vegetable.name.downcase,
+                             sowing_date: @vegetable.sowing_date)
     else
       render :index
     end

@@ -28,7 +28,7 @@ class User < ApplicationRecord
 
   def refresh_access_token(auth)
     self.access_token = auth.credentials.token
-    self.token_expires_at = Time.at(auth.credentials.expires_at) if auth.credentials.expires_at
+    self.token_expires_at = Time.zone.at(auth.credentials.expires_at) if auth.credentials.expires_at
     save!
   end
 end

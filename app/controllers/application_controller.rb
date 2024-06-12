@@ -9,9 +9,9 @@ class ApplicationController < ActionController::Base
   add_flash_types :success, :info, :warning, :danger
 
   # エラーハンドリング
-  rescue_from ActiveRecord::RecordNotFound, with: :render_404
-  rescue_from ActionController::RoutingError, with: :render_404
-  rescue_from StandardError, with: :render_500  # ExceptionをStandardErrorに変更
+  rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
+  rescue_from ActionController::RoutingError, with: :render_not_found
+  rescue_from StandardError, with: :render_internal_server_error # ExceptionをStandardErrorに変更
 
   protected
 
@@ -29,18 +29,19 @@ class ApplicationController < ActionController::Base
 
   public
 
-  def render_404(exception = nil)
+  def render_not_found(exception = nil)
     log_error(exception)
-    render(file: "#{Rails.root}/public/404.html", status: :not_found, layout: false)
+    render(file: Rails.public_path.join('404.html').to_s, status: :not_found, layout: false)
   end
 
-  def render_500(exception = nil)
+  def render_internal_server_error(exception = nil)
     log_error(exception)
-    render(file: "#{Rails.root}/public/500.html", status: :internal_server_error, layout: false)
+    render(file: Rails.public_path.join('500.html').to_s, status: :internal_server_error, layout: false)
   end
 
   def log_error(exception)
     return unless exception
+
     logger.error "Error: #{exception.class} - #{exception.message}"
     logger.error exception.backtrace.join("\n")
   end
