@@ -1,0 +1,53 @@
+ja:
+  flash:
+    notices:
+      user_registered: '登録されました'
+      settings_updated: '設定が更新されました。'
+      login_success: 'ログインしました'
+      profile_updated: 'プロフィールが更新されました'
+      vegetable_created: '野菜が正常に作成されました'
+      vegetable_deleted: '野菜が削除されました'
+    alerts:
+      line_auth_failed: 'LINE認証に失敗しました'
+      image_or_name_missing: '画像または野菜の名前が提供されていません。'
+      image_analysis_error: '画像の分析に失敗しました。エラー: %{message}'
+      image_analysis_failed: '画像の分析に失敗しました。ラベルが検出されませんでした。'
+  vegetable_status:
+    healthy: '健康的な状態です'
+    disease_or_pest: '病気や害虫の影響を受けている可能性があります'
+    ripe_or_harvest: '収穫の時期に近づいています'
+    dry_or_wilting: '水分不足の可能性があります。十分な水やりを行いましょう。'
+    overripe_or_rotten: '過熟や腐敗の可能性があります。早めに収穫しましょう。'
+    underripe_or_immature: '未熟な状態です。収穫の時期を待ちましょう。'
+    flowering: '花が咲いています。収穫の準備が進んでいます。'
+    fruiting: '実がついています。収穫の時期です。'
+    weed_or_grass: '雑草が生えています。間引きや雑草取りを行いましょう。'
+    insect_or_bug: '害虫が見られます。害虫駆除を行いましょう。'
+    drought: '干ばつの可能性があります。十分な水を与えましょう。'
+    fungal_or_mold: 'カビが生えています。風通しの良い環境を保ちましょう。'
+    nutrient_deficiency: '栄養不足の兆候が見られます。肥料を追加しましょう。'
+    overwatering: '過剰な水やりの影響が見られます。水はけを良くするために土を乾燥させましょう。'
+    stunted_growth: '成長が停滞しています。栄養不足や環境の問題が考えられます。'
+    sunburn: '日焼けが見られます。直射日光を避け、日陰に移動させましょう。'
+    overgrown: '過剰成長しています。間引きを行いましょう。'
+    undergrown: '成長が遅れています。十分な日光や栄養を与えましょう。'
+    viral_infection: 'ウイルス感染の兆候が見られます。感染した植物を早めに隔離しましょう。'
+    inappropriate_temperature: '温度が適切でない可能性があります。適切な温度設定を確認しましょう。'
+    other: 'その他の状態です。詳細を確認してください。'
+  activerecord:
+    models:
+      vegetable:
+        one: 野菜
+        other: 野菜
+    attributes:
+      vegetable:
+        name: 名前
+        sowing_date: 種まき日
+    errors:
+      models:
+        vegetable:
+          attributes:
+            name:
+              blank: "名前を入力してください"
+            sowing_date:
+              blank: "種まき日を入力してください"

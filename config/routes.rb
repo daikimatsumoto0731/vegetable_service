@@ -13,7 +13,9 @@ Rails.application.routes.draw do
   root 'static_pages#top'
   get 'terms', to: 'static_pages#terms', as: :terms
   get 'privacy_policy', to: 'static_pages#privacy_policy', as: :privacy_policy
+end
 
+Rails.application.routes.draw do
   # LINE通知設定へのルーティング
   get 'line_notification_settings', to: 'line_notifications#edit', as: 'line_notification_settings'
   patch 'line_notification_settings', to: 'line_notifications#update'
@@ -21,7 +23,9 @@ Rails.application.routes.draw do
 
   # LINE Bot Webhook URL
   post '/callback', to: 'line_bot#callback'
+end
 
+Rails.application.routes.draw do
   # 野菜関連のルーティング
   resources :vegetables, only: %i[index create destroy] do
     collection do
@@ -29,7 +33,7 @@ Rails.application.routes.draw do
       post 'create_and_redirect', to: 'vegetables#create_and_redirect'
     end
   end
-  
+
   # Eventsに関するルーティング
   resources :events, only: %i[index show create destroy] do
     member do
@@ -42,7 +46,9 @@ Rails.application.routes.draw do
   patch '/events/update_sowing_date', to: 'events#update_sowing_date', as: 'update_sowing_date_events'
 
   post 'translate', to: 'translate#translate'
+end
 
+Rails.application.routes.draw do
   # 画像分析のアクションへのルート
   get 'analyze_image/new', to: 'events#new_analyze_image', as: 'new_analyze_image'
   post 'analyze_image', to: 'events#analyze_image', as: 'analyze_image'

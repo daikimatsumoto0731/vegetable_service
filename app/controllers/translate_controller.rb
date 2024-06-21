@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TranslateController < ApplicationController
   def translate
     text = params[:text]
@@ -9,18 +11,33 @@ class TranslateController < ApplicationController
   private
 
   def translate_text(text, service)
-    Rails.logger.info "Starting translation for: #{text} using #{service}"
-    translated_text =
-      case service
-      when 'azure'
-        AzureTranslationService.translate(text)
-      else
-        TranslationService.translate(text)
-      end
-    Rails.logger.info "Translation result: #{translated_text}"
+    log_translation_start(text, service)
+    translated_text = perform_translation(text, service)
+    log_translation_result(translated_text)
     translated_text
   rescue StandardError => e
-    Rails.logger.error "Failed to translate vegetable name: #{e.message}"
-    text # 翻訳に失敗した場合は元の名前を使用
+    log_translation_error(e)
+    text # 翻訳に失敗した場合は元のテキストを使用
+  end
+
+  def log_translation_start(text, service)
+    Rails.logger.info "Starting translation for: #{text} using #{service}"
+  end
+
+  def perform_translation(text, service)
+    case service
+    when 'azure'
+      AzureTranslationService.translate(text) # AzureTranslationServiceのクラス名を修正
+    else
+      TranslationService.translate(text)
+    end
+  end
+
+  def log_translation_result(translated_text)
+    Rails.logger.info "Translation result: #{translated_text}"
+  end
+
+  def log_translation_error(error)
+    Rails.logger.error "Failed to translate text: #{error.message}"
   end
 end
