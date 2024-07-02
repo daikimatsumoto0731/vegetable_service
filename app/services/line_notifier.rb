@@ -9,38 +9,47 @@ class LineNotifier
   end
 
   def send_message(message)
-    # リクエストヘッダにAuthorizationを設定
     headers = {
       'Content-Type' => 'application/x-www-form-urlencoded',
       'Authorization' => "Bearer #{@access_token}"
     }
 
-    # 通知メッセージを設定
     body = {
       message:
     }
 
-    # LINE Notify APIにPOSTリクエストを送信
     response = self.class.post('/api/notify', headers:, body:)
-
-    # レスポンスの処理
     handle_response(response)
   end
 
   private
 
   def handle_response(response)
-    case response.code
-    when 200
-      Rails.logger.info('LINE notification sent successfully.')
-    when 400
-      Rails.logger.error("Bad Request: #{response.body}")
-    when 401
-      Rails.logger.error("Unauthorized: #{response.body}")
-    when 500
-      Rails.logger.error("Internal Server Error: #{response.body}")
+    if response.code == 200
+      handle_success
     else
-      Rails.logger.error("Unknown Error: #{response.body}")
+      handle_error(response.code, response.body)
     end
+  end
+
+  def handle_success
+    Rails.logger.info('LINE notification sent successfully.')
+  end
+
+  def handle_error(code, body)
+    case code
+    when 400
+      log_error("Bad Request: #{body}")
+    when 401
+      log_error("Unauthorized: #{body}")
+    when 500
+      log_error("Internal Server Error: #{body}")
+    else
+      log_error("Unknown Error: #{body}")
+    end
+  end
+
+  def log_error(message)
+    Rails.logger.error(message)
   end
 end

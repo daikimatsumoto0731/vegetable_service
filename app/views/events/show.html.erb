@@ -10,7 +10,7 @@
     </div>
     <div class="button-container">
       <%= link_to 'マイページに戻る', user_path(current_user), class: 'btn btn-primary analyze-button' %>
-      <%= link_to '画像を分析する', '#', class: 'btn btn-primary analyze-button', data: { toggle: 'modal', target: '#analyzeImageModal' } %>
+      <%= link_to '画像を分析する', '#', class: 'btn btn-primary analyze-button', data: { toggle: 'modal', target: '#analyzeImageModal', vegetable: @selected_vegetable } %>
     </div>
   </div>
 
@@ -39,13 +39,14 @@
         <%= form_with(id: 'analyze_image_form', url: analyze_image_path, local: true, multipart: true) do |form| %>
           <div class="modal-body">
             <%= form.label :vegetable_name, "野菜名を入力" %>
-            <%= form.text_field :vegetable_name, placeholder: "例：トマト", required: true, id: 'vegetable_name' %><br>
+            <%= form.text_field :vegetable_name, value: "", required: true, id: 'vegetable_name' %><br>
             <%= form.hidden_field :translated_vegetable_name, id: 'translated_vegetable_name' %>
             <%= form.label :image, "画像をアップロード" %>
             <%= form.file_field :image, accept: 'image/jpeg,image/png', required: true %>
           </div>
           <div class="modal-footer">
             <%= form.submit "画像を分析する", class: 'btn btn-success' %>
+            <%= link_to 'スケジュールに戻る', '#', class: 'btn btn-secondary', data: { dismiss: 'modal' } %>
           </div>
         <% end %>        
       </div>

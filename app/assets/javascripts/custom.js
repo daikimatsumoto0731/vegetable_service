@@ -1,4 +1,5 @@
 $(document).ready(function() {
+  // カレンダーの設定
   var calendarEl = document.getElementById('calendar');
   var calendar;
 
@@ -155,4 +156,44 @@ $(document).ready(function() {
       }
     });
   }
+
+  // モーダルを表示するボタンがクリックされたときの処理
+  $('[data-toggle="modal"]').on('click', function() {
+    var targetModal = $(this).data('target');
+    var vegetable = $(this).data('vegetable');
+    $(targetModal).data('vegetable', vegetable); // モーダルにデータ属性を設定
+    $(targetModal).modal('show');
+  });
+
+  // 画像を分析するモーダル表示用のボタンがクリックされたときの処理
+  $('#analyzeImageModal').on('show.bs.modal', function(event) {
+    var modal = $(this);
+    var vegetableName = modal.data('vegetable'); // データ属性から野菜名を取得
+    console.log("Vegetable name from modal data: ", vegetableName); // デバッグ用ログ
+    modal.find('#vegetable_name').val(vegetableName); // 野菜名フィールドに値を設定
+  });
+
+  $('#analyze_image_form').on('submit', function(e) {
+    e.preventDefault(); // フォームのデフォルト送信を防ぐ
+    var formData = new FormData(this);
+    $.ajax({
+      url: $(this).attr('action'),
+      type: 'POST',
+      data: formData,
+      contentType: false,
+      processData: false,
+      success: function(data) {
+        $('#analyzeImageModal .modal-body').html(data);
+        $('#analyzeImageModal').modal('show');
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert('画像の分析に失敗しました: ' + textStatus);
+      }
+    });
+  });
+
+  // モーダルを閉じるリンクの処理
+  $(document).on('click', '[data-dismiss="modal"]', function() {
+    $('#analyzeImageModal').modal('hide');
+  });
 });

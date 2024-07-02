@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - create_54
+  pull_request:
+    branches:
+      - create_54
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      db:
+        image: postgres:latest
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+        options: >-
+          --health-cmd="pg_isready"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1.4
+
+      - name: Install dependencies
+        run: |
+          gem install bundler
+          bundle install --jobs 4 --retry 3
+
+      - name: Set up database
+        run: |
+          cp config/database.yml.ci config/database.yml
+          bin/rails db:create
+          bin/rails db:schema:load
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: postgres://postgres:password@localhost:5432/vegetable_service_test
+
+      - name: Set up environment variables
+        run: |
+          echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}" > google-credentials.json
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/google-credentials.json" >> $GITHUB_ENV
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}
+
+      - name: Verify environment variables
+        run: |
+          echo "GOOGLE_APPLICATION_CREDENTIALS_JSON length: ${#GOOGLE_APPLICATION_CREDENTIALS_JSON}"
+          echo "GOOGLE_APPLICATION_CREDENTIALS: $GOOGLE_APPLICATION_CREDENTIALS"
+
+      - name: Debug environment variables
+        run: |
+          echo "GOOGLE_APPLICATION_CREDENTIALS content:"
+          cat google-credentials.json
+          echo "GOOGLE_APPLICATION_CREDENTIALS: $GOOGLE_APPLICATION_CREDENTIALS"
+
+      - name: Run tests
+        run: |
+          echo "Running tests with GOOGLE_APPLICATION_CREDENTIALS set to $GOOGLE_APPLICATION_CREDENTIALS"
+          bundle exec rspec
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: postgres://postgres:password@localhost:5432/vegetable_service_test
+          GOOGLE_APPLICATION_CREDENTIALS: $GOOGLE_APPLICATION_CREDENTIALS

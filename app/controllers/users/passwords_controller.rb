@@ -8,15 +8,24 @@ module Users
       yield resource if block_given?
 
       if resource.errors.empty?
-        resource.unlock_access! if unlockable?(resource)
-
-        set_flash_message!(:notice, :password_changed) # カスタムのフラッシュメッセージ
-        # パスワード再設定後にログイン画面にリダイレクト
-        redirect_to new_user_session_path and return
+        handle_successful_password_reset
       else
-        set_minimum_password_length
-        respond_with resource
+        handle_failed_password_reset
       end
+    end
+
+    private
+
+    def handle_successful_password_reset
+      resource.unlock_access! if unlockable?(resource)
+      set_flash_message!(:notice, :password_changed) # カスタムのフラッシュメッセージ
+      # パスワード再設定後にログイン画面にリダイレクト
+      redirect_to new_user_session_path and return
+    end
+
+    def handle_failed_password_reset
+      set_minimum_password_length
+      respond_with resource
     end
   end
 end

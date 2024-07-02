@@ -36,13 +36,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_07_090159) do
 
   create_table "line_notification_settings", force: :cascade do |t|
     t.integer "user_id", null: false
-    t.boolean "receive_notifications", default: false
+    t.boolean "receive_notifications", default: false, null: false
     t.string "frequency", default: "daily"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.time "notification_time"
-    t.string "line_auth_info_api_key"
-    t.string "line_auth_info_user_id"
     t.index ["user_id"], name: "index_line_notification_settings_on_user_id"
   end
 
@@ -69,7 +66,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_07_090159) do
     t.time "watering_time"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "receive_notifications"
+    t.boolean "receive_notifications", default: true, null: false
     t.index ["user_id"], name: "index_user_settings_on_user_id"
   end
 

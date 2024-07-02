@@ -13,22 +13,33 @@ class User < ApplicationRecord
   has_one :user_setting, dependent: :destroy
   has_many :harvests, dependent: :destroy
   has_many :notifications, dependent: :destroy
-  has_many :vegetables
+  has_many :vegetables, dependent: :destroy # :dependentオプションを追加
 
   # OmniAuth認証データからユーザーを検索または作成します
   def self.from_omniauth(auth)
-    where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
-      user.email = auth.info.email.presence || User.generate_email(auth)
-      user.password = Devise.friendly_token[0, 20]
-      user.username = auth.info.name.presence || 'LINE User'
-      user.line_user_id = auth.uid
-      user.prefecture = '未設定'
-    end
+    user = where(provider: auth.provider, uid: auth.uid).first_or_initialize
+    user.assign_attributes(
+      email: auth.info.email.presence || generate_email(auth),
+      password: Devise.friendly_token[0, 20],
+      username: auth.info.name.presence || 'LINE User',
+      line_user_id: auth.uid,
+      prefecture: '未設定'
+    )
+    user.save!
+    user
   end
 
   def refresh_access_token(auth)
     self.access_token = auth.credentials.token
-    self.token_expires_at = Time.at(auth.credentials.expires_at) if auth.credentials.expires_at
+    self.token_expires_at = Time.zone.at(auth.credentials.expires_at) if auth.credentials.expires_at
     save!
   end
+
+  private
+
+  def self.generate_email(auth)
+    "#{auth.uid}-#{auth.provider}-#{SecureRandom.hex(5)}@example.com"
+  end
+
+  private_class_method :generate_email
 end

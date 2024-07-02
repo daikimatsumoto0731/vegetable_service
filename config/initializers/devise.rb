@@ -14,7 +14,8 @@ Devise.setup do |config|
   # confirmation, reset password and unlock tokens in the database.
   # Devise will use the `secret_key_base` as its `secret_key`
   # by default. You can change it below and use your own secret key.
-  # config.secret_key = 'ec54592694a2a21acc2fc066658ca634111d8714a1114df4b7be47df913f017992dbda77112e3dbd0e1a5e2fce1299d59b4c703626da4bfe662a32ebd8885a82'
+  # config.secret_key = 'ec54592694a2a21acc2fc066658ca634111d8714a1114df4b7be47df913f017992dbda77112e3dbd0e
+  # 1a5e2fce1299d59b4c703626da4bfe662a32ebd8885a82'
 
   # ==> Controller configuration
   # Configure the parent class to the devise controllers.
@@ -126,7 +127,8 @@ Devise.setup do |config|
   config.stretches = Rails.env.test? ? 1 : 12
 
   # Set up a pepper to generate the hashed password.
-  # config.pepper = '40c1b4e396cddf8df7aa0743040fe08483e8c3a5f63038b2485b0732c539207b1ef3528bfdc389325bfd6ae389c77f9d529bfcec903822846c36917e9a4a192c'
+  # config.pepper = '40c1b4e396cddf8df7aa0743040fe08483e8c3a5f63038b2485b0732c539207b1ef3528bfdc389325bfd6
+  # ae389c77f9d529bfcec903822846c36917e9a4a192c'
 
   # Send a notification to the original email when the user's email is changed.
   # config.send_email_changed_notification = false
@@ -305,9 +307,20 @@ Devise.setup do |config|
   config.responder.error_status = :unprocessable_entity
   config.responder.redirect_status = :see_other
   config.sign_in_after_reset_password = false
-  config.omniauth :line, ENV['LINE_CHANNEL_ID'], ENV['LINE_CHANNEL_SECRET'], scope: 'profile openid email', bot_prompt: 'aggressive'
-  # ==> Configuration for :registerable
+  # config.secret_key =
+  #   'ec54592694a2a21acc2fc066658ca634111d8714a1114df4b7be47df913f017992dbda77112e3dbd0e1a5e2fce1299d
+  #   59b4c703626da4bfe662a32ebd8885a82'
 
+  # config.pepper =
+  #   '40c1b4e396cddf8df7aa0743040fe08483e8c3a5f63038b2485b0732c539207b1ef3528bfdc389325bfd6ae389c77f
+  #   9d529bfcec903822846c36917e9a4a192c'
+
+  config.omniauth :line, ENV.fetch('LINE_CHANNEL_ID', nil),
+                  ENV.fetch('LINE_CHANNEL_SECRET', nil),
+                  scope: 'profile openid email',
+                  bot_prompt: 'aggressive'
+
+  # ==> Configuration for :registerable
   # When set to false, does not sign a user in automatically after their password is
   # changed. Defaults to true, so a user is signed in automatically after changing a password.
   # config.sign_in_after_change_password = true
